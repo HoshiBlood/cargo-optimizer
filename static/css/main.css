@@ -1,0 +1,26 @@
+body {
+    background-color: rgb(243, 240, 235);
+}
+
+
+.header__img {
+    height: 48px;
+    width: 48px;
+}
+/* DASHBOARD */
+
+.action-card {
+    border: none;
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* TABLE */
+.table td, .table th {
+    vertical-align: middle;
+}

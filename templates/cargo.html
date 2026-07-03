@@ -1,0 +1,94 @@
+{% extends 'based.html' %}
+
+{% block title %}Грузы{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Управление грузами</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Добавить груз</div>
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+
+                        {% if form.errors %}
+                     <div class="alert alert-danger">
+                     {% for field, errors in form.errors.items() %}
+                     {% for error in errors %}
+                     <div>{{ error }}</div>
+                     {% endfor %}
+                     {% endfor %}
+                    </div>
+                     {% endif %}
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                {{ form.length.label(class="form-label") }}
+                                {{ form.length(class="form-control") }}
+                            </div>
+                            <div class="col mb-3">
+                                {{ form.width.label(class="form-label") }}
+                                {{ form.width(class="form-control") }}
+                            </div>
+                            <div class="col mb-3">
+                                {{ form.height.label(class="form-label") }}
+                                {{ form.height(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                {{ form.weight.label(class="form-label") }}
+                                {{ form.weight(class="form-control") }}
+                            </div>
+                            <div class="col mb-3">
+                                {{ form.quantity.label(class="form-label") }}
+                                {{ form.quantity(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            {{ form.is_stackable(class="form-check-input") }}
+                            {{ form.is_stackable.label(class="form-check-label") }}
+                        </div>
+                        <div class="form-check mb-3">
+                            {{ form.fragile(class="form-check-input") }}
+                            {{ form.fragile.label(class="form-check-label") }}
+                        </div>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Список грузов</div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr><th>Название</th><th>Габариты</th><th>Вес</th><th>Кол-во</th><th>Действия</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for c in cargos %}
+                            <tr>
+                                <td>{{ c.name }}</td>
+                                <td>{{ c.length }}×{{ c.width }}×{{ c.height }}</td>
+                                <td>{{ c.weight }}</td>
+                                <td>{{ c.quantity }}</td>
+                                <td>
+                                    <a href="{{ url_for('edit_cargo', id=c.id) }}" class="btn btn-sm btn-outline-secondary">Изменить</a>
+                                    <a href="{{ url_for('delete_cargo', id=c.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить?')">Удалить</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

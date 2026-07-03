@@ -1,0 +1,92 @@
+{% extends 'based.html' %}
+
+{% block title %}Создание задачи{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Новая задача загрузки</h2>
+    <form method="POST" id="taskForm">
+        {{ form.hidden_tag() }}
+        
+        <div class="mb-3">
+            {{ form.transport.label(class="form-label") }}
+            {{ form.transport(class="form-select") }}
+        </div>
+
+        <h4>Грузы для загрузки</h4>
+        <div id="cargo-list">
+        
+        </div>
+
+        <button type="button" id="add-cargo" class="btn btn-secondary mb-3">+ Добавить груз</button>
+        
+        <input type="hidden" name="cargo_items" id="cargo_items">
+        <button type="submit" class="btn btn-primary">Создать и рассчитать</button>
+    </form>
+</div>
+
+<script>
+    let cargoList = document.getElementById('cargo-list');
+
+    function addCargoRow() {
+        let row = document.createElement('div');
+        row.className = 'row mb-2 cargo-item';
+        row.innerHTML = `
+            <div class="col">
+                <select class="form-select cargo-select" name="cargo_id[]">
+                    <option value="">Выберите груз</option>
+                    {% for c in cargos %}
+                    <option value="{{ c.id }}">{{ c.name }} ({{ c.length }}×{{ c.width }}×{{ c.height }}, {{ c.weight }}кг)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-2">
+                <input type="number" class="form-control quantity" name="quantity[]" placeholder="Кол-во" min="1" value="1">
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-danger remove-cargo">Удалить</button>
+            </div>
+        `;
+        cargoList.appendChild(row);
+    }
+
+    
+    addCargoRow();
+
+    document.getElementById('add-cargo').addEventListener('click', addCargoRow);
+
+    cargoList.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-cargo')) {
+            if (document.querySelectorAll('.cargo-item').length > 1) {
+                e.target.closest('.cargo-item').remove();
+            }
+        }
+    });
+
+    document.getElementById('taskForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let cargoItems = [];
+        let valid = true;
+
+        document.querySelectorAll('.cargo-item').forEach(item => {
+            let cargoId = item.querySelector('.cargo-select').value;
+            let quantity = parseInt(item.querySelector('.quantity').value);
+
+            if (cargoId && quantity > 0) {
+                cargoItems.push({cargo_id: parseInt(cargoId), quantity: quantity});
+            } else if (cargoId) {
+                valid = false;
+            }
+        });
+
+        if (!valid || cargoItems.length === 0) {
+            alert('Проверьте выбранные грузы и количество');
+            return;
+        }
+
+        document.getElementById('cargo_items').value = JSON.stringify(cargoItems);
+        this.submit();
+    });
+</script>
+{% endblock %}

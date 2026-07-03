@@ -1,0 +1,36 @@
+{% extends 'based.html' %}
+
+{% block title %}Редактировать груз{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Редактирование груза: {{ cargo.name }}</h2>
+    <div class="card w-50">
+        <div class="card-body">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">{{ form.name.label }} {{ form.name(class="form-control") }}</div>
+                <div class="row">
+                    <div class="col mb-3">{{ form.length.label }} {{ form.length(class="form-control") }}</div>
+                    <div class="col mb-3">{{ form.width.label }} {{ form.width(class="form-control") }}</div>
+                    <div class="col mb-3">{{ form.height.label }} {{ form.height(class="form-control") }}</div>
+                </div>
+                <div class="row">
+                    <div class="col mb-3">{{ form.weight.label }} {{ form.weight(class="form-control") }}</div>
+                    <div class="col mb-3">{{ form.quantity.label }} {{ form.quantity(class="form-control") }}</div>
+                </div>
+                <div class="form-check mb-3">
+                    {{ form.is_stackable(class="form-check-input") }}
+                    {{ form.is_stackable.label(class="form-check-label") }}
+                </div>
+                <div class="form-check mb-3">
+                    {{ form.fragile(class="form-check-input") }}
+                    {{ form.fragile.label(class="form-check-label") }}
+                </div>
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('cargo') }}" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

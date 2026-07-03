@@ -1,0 +1,25 @@
+{% extends 'based.html' %}
+
+{% block title %}Редактирование транспорта{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Редактирование транспорта: {{ transport.name }}</h2>
+    <div class="card w-50">
+        <div class="card-body">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">{{ form.name.label }} {{ form.name(class="form-control") }}</div>
+                <div class="row">
+                    <div class="col mb-3">{{ form.max_length.label }} {{ form.max_length(class="form-control") }}</div>
+                    <div class="col mb-3">{{ form.max_width.label }} {{ form.max_width(class="form-control") }}</div>
+                    <div class="col mb-3">{{ form.max_height.label }} {{ form.max_height(class="form-control") }}</div>
+                </div>
+                <div class="mb-3">{{ form.max_weight.label }} {{ form.max_weight(class="form-control") }}</div>
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('transport') }}" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'based.html' %}
+
+{% block title %}Задачи{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Список задач загрузки</h2>
+    <a href="{{ url_for('CreateTasks') }}" class="btn btn-primary mb-3">Создать новую задачу</a>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата создания</th>
+                <th>Транспорт</th>
+                <th>Статус</th>
+                <th>Эффективность</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ task.transport.name }}</td>
+                <td>
+                    {% if task.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">Ожидание</span>
+                    {% else %}
+                        <span class="badge bg-success">Выполнено</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.result %}
+                        {{ task.result.efficiency|round(1) }}%
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('Details', task_id=task.id) }}" class="btn btn-sm btn-outline-secondary">Детали</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

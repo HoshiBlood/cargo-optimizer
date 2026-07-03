@@ -1,0 +1,52 @@
+{% extends 'based.html' %}
+
+{% block title %}Детали задачи #{{ task.id }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Задача #{{ task.id }}</h2>
+    <p><strong>Транспорт:</strong> {{ task.transport.name }} ({{ task.transport.max_length }}×{{ task.transport.max_width }}×{{ task.transport.max_height }}, грузоподъёмность {{ task.transport.max_weight }} кг)</p>
+    <p><strong>Дата создания:</strong> {{ task.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+    <p><strong>Статус:</strong> {% if task.status == 'done' %}Выполнено{% else %}В обработке{% endif %}</p>
+
+    {% if result %}
+    <div class="alert alert-info">
+        <h4>Результат расчёта</h4>
+        <p>Использованный объём: {{ result.used_volume|round(2) }} м³ ({{ result.efficiency|round(1) }}%)</p>
+        <p>Использованный вес: {{ result.used_weight|round(2) }} кг</p>
+        <p>{{ result.comment }}</p>
+    </div>
+    {% endif %}
+
+    <h3>Размещение грузов</h3>
+    {% if placements %}
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <thead>
+                <tr><th>Груз</th><th>Позиция (X, Y, Z)</th><th>Размеры (Д×Ш×В)</th><th>Повёрнут</th></tr>
+            </thead>
+            <tbody>
+                {% for p in placements %}
+                <tr>
+                    <td>{{ p.cargo.name }}</td>
+                    <td>{{ p.x|round(2) }}, {{ p.y|round(2) }}, {{ p.z|round(2) }}</td>
+                    <td>
+                        {% if p.rotated %}
+                            {{ p.cargo.width }}×{{ p.cargo.length }}×{{ p.cargo.height }}
+                        {% else %}
+                            {{ p.cargo.length }}×{{ p.cargo.width }}×{{ p.cargo.height }}
+                        {% endif %}
+                    </td>
+                    <td>{% if p.rotated %}Да{% else %}Нет{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>Нет данных о размещении (возможно, расчёт не выполнен).</p>
+    {% endif %}
+
+    <a href="{{ url_for('LoadingTasks') }}" class="btn btn-secondary">Назад к задачам</a>
+</div>
+{% endblock %}
